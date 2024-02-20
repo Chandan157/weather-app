@@ -1,75 +1,65 @@
-const temperatureField = document.querySelector(".temp");
-const locationField = document.querySelector(".time_location p");
-const dateandTimeField = document.querySelector(".time_location span");
-const conditionField = document.querySelector(".condition p");
-const searchField = document.querySelector(".search_area");
-const form = document.querySelector("form");
-const weatherIcon = document.querySelector(".weather-icon");
-// const loadingScreen = document.querySelector(".loading");
-const innerContainer = document.querySelector(".inner-container");
+const inputBox = document.querySelector(".input-box");
+const searchBtn = document.getElementById("searchBtn");
+const weather_img = document.querySelector(".weather-img");
+const temperature = document.querySelector(".temperature");
+const description = document.querySelector(".description");
+const country = document.querySelector(".country");
+const humidity = document.getElementById("humidity");
+const wind_speed = document.getElementById("wind-speed");
 
-form.addEventListener("submit", searchForLocation);
+const location_not_found = document.querySelector(".location-not-found");
 
-let target = "New Delhi";
-const fetchResults = async (targetLocation) => {
-  // innerContainer.style.display = "none";
-  // loadingScreen.style.display = "block";
+const weather_body = document.querySelector(".weather-body");
 
-  let url = `http://api.weatherapi.com/v1/current.json?key=18edb8a8fee44075be473828241102&q=${targetLocation}&aqi=no`;
+async function checkWeather(city) {
+  const api_key = "76c2a2acb097892260cdef183e38fad0";
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${api_key}`;
 
-  const res = await fetch(url);
-  const data = await res.json();
+  // const weather_data = await fetch(`${url}`).then((response) =>
+  //   response.json()
+  // );
 
-  let locationName = data.location.name;
-  let time = data.location.localtime;
+  const res = await fetch(`${url}`);
+  const weather_data = await res.json();
 
-  let temp = data.current.temp_c;
-  let condition = data.current.condition.text;
-
-  let iconSrc = data.current.condition.icon;
-
-  // innerContainer.style.display = "block";
-  // loadingScreen.style.display = "none";
-
-  updateDetails(temp, locationName, time, condition, iconSrc);
-};
-
-function updateDetails(temp, locationName, time, condition, iconSrc) {
-  let splitDate = time.split(" ")[0];
-  let splitTime = time.split(" ")[1];
-  let currentDay = getDayName(new Date(splitDate).getDay());
-
-  temperatureField.innerText = `${temp}°C`;
-  locationField.innerText = locationName;
-  dateandTimeField.innerText = `${splitDate} ${currentDay} ${splitTime}`;
-  conditionField.innerText = condition;
-  weatherIcon.src = iconSrc;
-}
-
-function searchForLocation(e) {
-  e.preventDefault();
-
-  target = searchField.value;
-  fetchResults(target);
-}
-
-fetchResults(target);
-
-function getDayName(number) {
-  switch (number) {
-    case 0:
-      return "Sunday";
-    case 1:
-      return "Monday";
-    case 2:
-      return "Tuesday";
-    case 3:
-      return "Wednesday";
-    case 4:
-      return "Thursday";
-    case 5:
-      return "Friday";
-    case 6:
-      return "Saturday";
+  if (weather_data.cod === `404`) {
+    location_not_found.style.display = "flex";
+    weather_body.style.display = "none";
+    console.log("error");
+    return;
   }
+
+  console.log("run");
+  location_not_found.style.display = "none";
+  weather_body.style.display = "flex";
+  temperature.innerHTML = `${Math.round(weather_data.main.temp - 273.15)}°C`;
+  description.innerHTML = `${weather_data.weather[0].description}`;
+  country.innerHTML = `${weather_data.sys.country}`;
+
+  humidity.innerHTML = `${weather_data.main.humidity}%`;
+  wind_speed.innerHTML = `${weather_data.wind.speed}Km/H`;
+
+  switch (weather_data.weather[0].main) {
+    case "Clouds":
+      weather_img.src = "/assets/cloud.png";
+      break;
+    case "Clear":
+      weather_img.src = "/assets/clear.png";
+      break;
+    case "Rain":
+      weather_img.src = "/assets/rain.png";
+      break;
+    case "Mist":
+      weather_img.src = "/assets/mist.png";
+      break;
+    case "Snow":
+      weather_img.src = "/assets/snow.png";
+      break;
+  }
+
+  console.log(weather_data);
 }
+
+searchBtn.addEventListener("click", () => {
+  checkWeather(inputBox.value);
+});
