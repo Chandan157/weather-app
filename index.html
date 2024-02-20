@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather app</title>
+    <link rel="shortcut icon" href="./assets/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <nav>
+        <h1>WEATHER APP</h1>
+      </nav>
+      <div>
+        <form>
+          <input
+            type="text"
+            placeholder="Search your location"
+            class="search_area"
+          />
+          <button type="submit" class="search_button">Search</button>
+        </form>
+      </div>
+
+      <div class="inner-container">
+        <div class="weather-container">
+          <div class="time_location">
+            <p>Delhi</p>
+            <span>11:15 - Monday 2022-09-26</span>
+          </div>
+
+          <div class="sub-bar">
+            <div class="temp">
+              <p>20°C</p>
+            </div>
+
+            <div class="condition">
+              <p>Mist</p>
+              <img class="weather-icon" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="loading">
+        <img src="./assets/loading.gif" alt="" width="130px" />
+      </div> -->
+    </div>
+  </body>
+  <script src="script.js"></script>
+</html>
